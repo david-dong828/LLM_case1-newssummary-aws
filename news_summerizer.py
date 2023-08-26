@@ -80,7 +80,8 @@ def main():
     chat_prompt = prompt_preparation(article_title,article_text,language)
     print(summarizer_news(chat_prompt))
 
-
+def test():
+    print('this is a test')
 
 
 if __name__ == '__main__':
