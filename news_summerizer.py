@@ -11,10 +11,7 @@ from langchain.schema import HumanMessage
 import os
 
 
-#os.environ['HTTP_PROXY'] = 'http://localhost:7890'
-#os.environ['HTTPS_PROXY'] = 'http://localhost:7890'
-# openai_api_key='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'
-os.environ['OPENAI_API_KEY'] = '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'
+os.environ['OPENAI_API_KEY'] = 'xxxxxxxxxxxxxxxxxxxxxxxxxx'
 
 def scrape_news_article_and_parse(url):
     headers = {
