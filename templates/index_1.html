@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>News Summarize Chatbot</title>
+    <style>
+        .music-player {
+            position: fixed;
+            top: 75px;
+            left: 0;
+            width: 280px;
+            height: 100px;
+            z-index: 1000;
+        }
+
+        .loading {
+            color: blueviolet;
+        }
+
+        .chatbot {
+            color: green;
+            font-family: Arial;
+
+        }
+
+        .response {
+            color: #4c4c4c;
+            font-family: "IBM Plex Mono", monospace;
+        }
+        body {
+            background-color: #f2f2f2;
+            font-family: Arial, sans-serif;
+        }
+        #chat-container {
+            width: 60%;
+            margin: auto;
+            margin-top: 10%;
+            padding: 20px;
+            border: 1px solid #999;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px #999;
+        }
+        #user-input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #999;
+            border-radius: 5px;
+        }
+
+        #chat-list li {
+            margin-bottom: 10px;
+        }
+        /*#chat-list li.user {*/
+        /*    margin-bottom: 20px; */
+        /*}*/
+        #chat-list li.chatbot {
+            margin-bottom: 5px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="music-player">
+      <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=280 height=100
+      src="//music.163.com/outchain/player?type=0&id=8604363154&auto=0&height=430"></iframe>
+    </div>
+
+
+    <div style="position: absolute; top:75px; right: 300px;"><b><i>Language</i></b></div>
+
+    <select id="language-select" style="position: absolute; top:100px; right: 300px;">
+      <option value="english">English</option>
+      <option value="french">Francais</option>
+      <option value="chinese">中文</option>
+    </select>
+
+    <div id="chat-container">
+        <ul id="chat-list"></ul>
+        <input type="text" id="user-input" placeholder="Type the Link of the News you want to summarize...
+    Select Language before hitting ENTER !/输入新闻网址，选择语言，见证奇迹吧！">
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+
+        // // Get player element
+        // const player = document.getElementById('music-player');
+        //
+        // // Play audio
+        // player.play();
+
+        let requestInProgress = false;
+        $(document).ready(function() {
+            $('#user-input').on('keypress', function(e) {
+                if (e.which == 13) {
+
+                    let user_input = $(this).val();
+                    $('#chat-list').append('<li>' +'<b>[User] News Link: </b>' + '<i>'+user_input+'</i>' + '</li>');
+
+                    requestInProgress = true;
+                    if(requestInProgress) {
+                        $('#chat-list').append('<li class="loading">Loading the News... ... <i> if no response for a long time, Try again...</i>' +
+                            '正在阅读新闻，请耐心等待... 如若长时间无回应，请重试</li>');
+                    }
+
+                    $.post('/process', {user_input: user_input}, function(data) {
+
+                        requestInProgress = false;
+                        if (!requestInProgress) {
+                             $('#chat-list li:contains("Loading")').remove();
+                        }
+
+                        if (data.bot_response < 0) {
+                            $('#chat-list').append('<li class="chatbot">' +'<b>[News Summary]:  <br></b>' + 'Link Error, Try again' + '</li>');
+                        }
+                        else {
+                            let sentences = data.bot_response.split("-");
+                            let formattedResponse = sentences.join("<br> -");
+                            formattedResponse = '<span class="response">'+ formattedResponse + '</span>'
+
+                            $('#chat-list').append('<li class="chatbot">' +'<b>News Summary:  <br></b>' + formattedResponse + '</li>');
+                        }
+
+                    });
+                    $(this).val('');
+                }
+            });
+        });
+    </script>
+
+    <!-- Language select dropdown -->
+    <script>
+
+    $('#language-select').change(function() {
+      const lang = $(this).val();
+
+      // Send selection to backend
+      $.post('/set-language', {lang: lang}, function() {
+        console.log('Language selected:', lang);
+      });
+
+    });
+
+    </script>
+
+
+</body>
+</html>

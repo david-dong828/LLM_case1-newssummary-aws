@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Summarize Chatbot</title>
+    <style>
+        .music-player {
+            position: fixed;
+            bottom: 10px;
+            left: 0;
+            width: 280px;
+            height: 100px;
+            z-index: 1000;
+        }
+
+        .loading {
+            color: blueviolet;
+        }
+
+        .chatbot {
+            color: green;
+            font-family: Arial;
+
+        }
+
+        .response {
+            color: #4c4c4c;
+            font-family: "IBM Plex Mono", monospace;
+        }
+        body {
+            background-color: #f2f2f2;
+            font-family: Arial, sans-serif;
+        }
+        #chat-container {
+            width: 60%;
+            margin: auto;
+            margin-top: 10%;
+            padding: 20px;
+            border: 1px solid #999;
+            border-radius: 10px;
+            background-color: #fff;
+            -webkit-box-shadow: 0 0 10px #999;
+                    box-shadow: 0 0 10px #999;
+        }
+        #input-container {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: justify;
+                -ms-flex-pack: justify;
+                    justify-content: space-between;
+        }
+        #user-input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #999;
+            border-radius: 5px;
+        }
+        #send-button {
+            width: 15%;
+            padding: 12px;
+            margin: 10px 0;
+            cursor: pointer;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        #chat-list li {
+            margin-bottom: 10px;
+        }
+        /*#chat-list li.user {*/
+        /*    margin-bottom: 20px; */
+        /*}*/
+        #chat-list li.chatbot {
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            #chat-container {
+                width: 80%;
+            }
+        }
+        @media (max-width: 480px) {
+            #chat-container {
+                width: 100%;
+            }
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+</head>
+<body>
+
+    <div class="music-player">
+      <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=280 height=100
+      src="//music.163.com/outchain/player?type=0&id=8604363154&auto=1&height=430"></iframe>
+    </div>
+
+
+    <div style="position: sticky; top:50px; right: 300px;"><b><i>Language</i></b></div>
+
+    <select id="language-select" style="position: sticky; top:68px; right: 300px;">
+      <option value="english">English</option>
+      <option value="french">Francais</option>
+      <option value="chinese">中文</option>
+    </select>
+
+    <div id="chat-container">
+        <ul id="chat-list"></ul>
+        <div>
+            <input type="text" id="user-input" placeholder="Type the Link of the News you want to summarize...
+    Select Language before hitting ENTER !/输入新闻网址，选择语言，见证奇迹吧！">
+            <button id="send-button">Send</button>
+        </div>
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+
+        let requestInProgress = false;
+        $(document).ready(function() {
+            function sendMessage() {
+
+                let user_input = $('#user-input').val();
+                $('#chat-list').append('<li>' +'<b>[User] News Link: </b>' + '<i>'+user_input+'</i>' + '</li>');
+
+                requestInProgress = true;
+                if(requestInProgress) {
+                    $('#chat-list').append('<li class="loading">Loading the News... ... <i> if no response for a long time, Try again...</i>' +
+                        '正在阅读新闻，请耐心等待... 如若长时间无回应，请重试</li>');
+                }
+
+                $.post('/process', {user_input: user_input}, function(data) {
+
+                    requestInProgress = false;
+                    if (!requestInProgress) {
+                         $('#chat-list li:contains("Loading")').remove();
+                    }
+
+                    if (data.bot_response < 0) {
+                        $('#chat-list').append('<li class="chatbot">' +'<b>[News Summary]:  <br></b>' + 'Link Error, Try again' + '</li>');
+                    }
+                    else {
+                        let sentences = data.bot_response.split("-");
+                        let formattedResponse = sentences.join("<br> -");
+                        formattedResponse = '<span class="response">'+ formattedResponse + '</span>'
+
+                        $('#chat-list').append('<li class="chatbot">' +'<b>News Summary:  <br></b>' + formattedResponse + '</li>');
+                    }
+
+                });
+                $('#user-input').val('');
+            }
+            $('#user-input').on('keypress', function(e) {
+                if (e.which == 13) {
+                    sendMessage();
+                }
+            });
+
+            $('#send-button').on('click', function() {
+                sendMessage();
+            });
+        });
+
+
+    </script>
+
+    <!-- Language select dropdown -->
+    <script>
+    $('#language-select').change(function() {
+      const lang = $(this).val();
+
+      // Send selection to backend
+      $.post('/set-language', {lang: lang}, function() {
+        console.log('Language selected:', lang);
+      });
+
+    });
+
+    </script>
+
+
+</body>
+</html>
