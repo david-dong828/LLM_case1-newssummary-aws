@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Toolkits MainPage</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: 'Montserrat',Sans-Serif;
+            text-align: center;
+            padding: 5% 0;
+        }
+        .music-player {
+            position: fixed;
+            bottom: 10px;
+            left: 0;
+            width: 280px;
+            height: 100px;
+            z-index: 1000;
+        }
+
+        h2 {
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #262424;
+            font-weight: 300;
+            margin-bottom: 50px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        button {
+            width: 200px;
+            padding: 12px;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        #moretools {
+            background-color: #f57c00;
+        }
+
+        #moretools:hover {
+            background-color: #f26d00;
+        }
+
+        .profile-section {
+            display: flex;
+            justify-content: center;
+            align-items: start;
+            gap: 50px; /* Space between the About Me section and the LinkedIn badge */
+        }
+
+        .about-me {
+            flex: 1; /* This will take up any available space */
+            max-width: 80%; /* Control the width of the About Me section */
+        }
+
+        .about-me-link {
+            color: inherit; /* Ensures the link color matches the surrounding text */
+            text-decoration: none; /* Removes the default underline from the link */
+        }
+
+        .about-me-link:hover {
+            text-decoration: underline; /* Adds an underline when the link is hovered */
+        }
+
+        .detail-word {
+            font-style: italic; /* Makes the text italic */
+            font-size: 0.8em;   /* Makes the text smaller than the surrounding text */
+            margin-left: 8px;  /* Adds some space between "About Me" and "Details"
+        }
+        .linkdin-badge-container {
+            flex-basis: 250px; /* This is a starting width for the LinkedIn badge. Adjust as needed. */
+            max-width: 30%; /* Ensuring the badge doesn't get too large */
+            overflow: hidden; /* In case the badge overflows its container */
+        }
+
+        .linkdin-badge-container iframe,
+
+        .linkdin-badge-container img {
+            width: 30%; /* Ensures the badge scales to its container */
+            height: auto; /* Keeps the aspect ratio of the badge */
+        }
+
+        .buttons-section {
+            text-align: center; /* Center-aligns the buttons */
+        }
+    </style>
+
+</head>
+<body>
+    <div class="music-player">
+      <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=280 height=100
+      src="//music.163.com/outchain/player?type=0&id=8604363154&auto=1&height=430"></iframe>
+    </div>
+
+    <div class="profile-section">
+        <div class="about-me">
+            <h2><a href="https://www.linkedin.com/in/dong--han/" class="about-me-link" target="_blank">
+                About Me<span class="detail-word">(Hit to reach my LinkdIn)</span>
+            </a>
+
+            </h2>
+            <p>Hello! I'm David, a former Lean consultant and now a Computer Science student.<br>
+               <br>
+               I'm a coding enthusiast.<br>
+               <br>
+               Welcome to my space dedicated to AI tools:<br>
+               <br>
+                <i>1. The first tool: designed to summarize news articles, supports input in any language.<br></i>
+               <br>
+                <i>2. The second tool: extracts words from videos.<br></i>
+               <br>
+               Enjoy exploring and using these tools!
+            </p>
+        </div>
+
+<!--        <div class="linkdin-badge-container">-->
+<!--            <script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>-->
+
+<!--            <div class="badge-base LI-profile-badge" data-locale="en_US" data-size="medium" data-theme="light" data-type="VERTICAL" data-vanity="dong&#45;&#45;han" data-version="v1">-->
+<!--                <a class="badge-base__link LI-simple-link" href="https://ca.linkedin.com/in/dong&#45;&#45;han?trk=profile-badge"></a>-->
+<!--            </div>-->
+<!--        </div>-->
+    </div>
+
+    <div class="buttons-section">
+        <button id="news" title="Click to get a summary of the news through the news links" onclick="redirectTo('index.html')">News Summary</button>
+        <button id="videoTextExtract" title="Click to get a whole video's texts" onclick="redirectTo('index_video.html')">Video Text Extract</button>
+        <button id="moretools">More AI tools are coming...</button>
+    </div>
+
+    <script>
+        function redirectTo(url) {
+            window.location.href=url;
+        }
+    </script>
+
+</body>
+</html>

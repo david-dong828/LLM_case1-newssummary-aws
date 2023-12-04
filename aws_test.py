@@ -3,12 +3,22 @@
 # Mail: dongh@mun.ca
 from flask import Flask,request,render_template,jsonify
 import news_summerizer
+import youtube_video_summary
 
 app = Flask(__name__)
+language = 'english'
 
 @app.route("/")
 def index():
+    return render_template("index_main.html")
+
+@app.route("/index.html")
+def news_summary():
     return render_template("index.html")
+
+@app.route("/index_video.html")
+def video_extract_text():
+    return render_template("index_video.html")
 
 # @app.route("/get")
 # def get_bot_response():
@@ -34,6 +44,13 @@ def process():
 
     if bot_response.isdigit() and bot_response < 0:
         return jsonify({'bot_response' : -1}) if bot_response == -1 else jsonify({'bot_response' : -2})
+
+    return jsonify({'bot_response' : bot_response})
+
+@app.route('/processVideo', methods=['POST'])
+def processVideo():
+    user_input = request.form['user_input']
+    bot_response = youtube_video_summary.youtube_extract_words(user_input)
 
     return jsonify({'bot_response' : bot_response})
 
